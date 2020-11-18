@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace FieldCacheNamespace
 {
@@ -23,9 +25,11 @@ namespace FieldCacheNamespace
         /// Use this in your property's getter
         /// </summary>
         /// <param name="ctor">Expression to initialize the given property</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T GetValue(Func<T> ctor)
         {
             if (!initted)
+            {
                 lock (ctor)
                 {
                     if (!initted)
@@ -34,8 +38,7 @@ namespace FieldCacheNamespace
                         initted = true;
                     }
                 }
-            if (value is null)
-                throw new ConstructorReturnedNullException();
+            }
             return value;
         }
 
