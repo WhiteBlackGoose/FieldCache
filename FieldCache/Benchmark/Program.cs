@@ -37,10 +37,20 @@ namespace Benchmark
         }
     }
 
-    public record WorksWithFieldCacheLcm(long a, long b)
+    public record WorksWithFieldCacheLcm
     {
-        public long Lcm => lcm.GetValue(() => Funcs.DumbAlgLcm(this.a, this.b));
+        public long Lcm => lcm.GetValue;
         private FieldCache<long> lcm;
+
+        public long a { get; private set; }
+        public long b { get; private set; }
+
+        public WorksWithFieldCacheLcm(long a, long b)
+        {
+            this.a = a;
+            this.b = b;
+            lcm = new(() => Funcs.DumbAlgLcm(this.a, this.b));
+        }
     }
 
     public class ContainerPerformance
@@ -67,12 +77,12 @@ namespace Benchmark
     {
         static void Main(string[] args)
         {
-            //BenchmarkRunner.Run<ContainerPerformance>();
-            var withCache = new WorksWithFieldCacheLcm(Funcs.A, Funcs.B);
-            for (long i = 0; i < 10_000_000_000_0L; i++)
-            {
-                var v = withCache.Lcm;
-            }
+            BenchmarkRunner.Run<ContainerPerformance>();
+            //var withCache = new WorksWithFieldCacheLcm(Funcs.A, Funcs.B);
+            //for (long i = 0; i < 10_000_000_000_0L; i++)
+            //{
+            //    var v = withCache.Lcm;
+            //}
         }
     }
 }

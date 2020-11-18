@@ -20,26 +20,35 @@ namespace FieldCacheNamespace
     {
         private T value;
         private bool initted;
+        Func<T> ctor;
+        public FieldCache(Func<T> ctor)
+        {
+            value = default;
+            initted = false;
+            this.ctor = ctor;
+        }
 
         /// <summary>
         /// Use this in your property's getter
         /// </summary>
         /// <param name="ctor">Expression to initialize the given property</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T GetValue(Func<T> ctor)
+        public T GetValue
         {
-            if (!initted)
+            get
             {
-                lock (ctor)
+                if (!initted)
                 {
-                    if (!initted)
+                    lock (ctor)
                     {
-                        value = ctor();
-                        initted = true;
+                        if (!initted)
+                        {
+                            value = ctor();
+                            initted = true;
+                        }
                     }
                 }
+                return value;
             }
-            return value;
         }
 
         /// <summary>
