@@ -39,7 +39,8 @@ namespace Benchmark
 
     public record WorksWithFieldCacheLcm(long a, long b)
     {
-        public long Lcm => lcm.GetValue(() => Funcs.DumbAlgLcm(this.a, this.b));
+        private long DoIt() => Funcs.DumbAlgLcm(this.a, this.b);
+        public long Lcm => lcm.GetValue(DoIt);
         private FieldCache<long> lcm;
     }
 

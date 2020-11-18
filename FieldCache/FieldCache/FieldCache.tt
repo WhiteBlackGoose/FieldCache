@@ -1,0 +1,88 @@
+﻿
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+
+using System;
+using System.Runtime.CompilerServices;
+
+namespace FieldCacheNamespace
+{
+    /// <summary>
+    /// Provides lazy initialization experience. Is better than the Lazy class as:
+    /// 1) Is a struct
+    /// 2) Does not affect record's Equals in a bad way Lazy does
+    /// <code>
+    /// public int MyProperty => myProperty; // same as myProperty.Value
+    /// public Container int myProperty = new(() => some method);
+    /// </code>
+    /// </summary>
+    /// <typeparam name="T">
+    /// The type to store inside
+    /// </typeparam>
+    public struct FieldCache<T> : IEquatable<FieldCache<T>>
+    {
+        //public FieldCache(object holder)
+        //{
+        //    this.holder = holder;
+        //    value = default;
+        //    initted = false;
+        //}
+        //
+        //private object holder;
+        private T value;
+        private bool initted;
+
+        <# for (int i = 0; i < 10; i++) { #>
+        /// <summary>
+        /// Use this in your property's getter
+        /// </summary>
+        /// <param name="ctor">Expression to initialize the given property</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public T GetValue
+<# if (i > 0) { #>
+<
+T0
+<# for (int j = 1; j < i; j++) { #>
+        , T<#= j #>
+<# } #>
+>
+<# } #>
+(in Func<
+        <# for (int j = 0; j < i; j++) { #>
+        T<#= j #>, 
+<# } #>
+T> ctor)
+        {
+            if (!initted)
+            {
+                lock (ctor)
+                {
+                    if (!initted)
+                    {
+                        value = ctor();
+                        initted = true;
+                    }
+                }
+            }
+            return value;
+        }
+        <# } #>
+
+        /// <summary>
+        /// So that when records get compared, this field will not affect the result
+        /// </summary>
+        public bool Equals(FieldCache<T> _)
+            => true;
+
+        /// <summary>
+        /// So that when records get compared, this field will not affect the result
+        /// </summary>
+        public override bool Equals(object obj)
+            => true;
+
+        /// <summary>
+        /// So that when records get compared, this field will not affect the result
+        /// </summary>
+        public override int GetHashCode() => 0;
+    }
+}

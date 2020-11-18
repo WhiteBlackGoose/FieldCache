@@ -11,4 +11,27 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="FieldCache.tt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="FieldCache.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FieldCache.cs</LastGenOutput>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="FieldCache.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FieldCache.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>
