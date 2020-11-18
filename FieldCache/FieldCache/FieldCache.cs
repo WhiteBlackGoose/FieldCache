@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using System.Threading;
 
 namespace FieldCacheNamespace
 {
@@ -20,35 +19,26 @@ namespace FieldCacheNamespace
     {
         private T value;
         private bool initted;
-        Func<T> ctor;
-        public FieldCache(Func<T> ctor)
-        {
-            value = default;
-            initted = false;
-            this.ctor = ctor;
-        }
 
         /// <summary>
         /// Use this in your property's getter
         /// </summary>
         /// <param name="ctor">Expression to initialize the given property</param>
-        public T GetValue
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public T GetValue(in Func<T> ctor)
         {
-            get
+            if (!initted)
             {
-                if (!initted)
+                lock (ctor)
                 {
-                    lock (ctor)
+                    if (!initted)
                     {
-                        if (!initted)
-                        {
-                            value = ctor();
-                            initted = true;
-                        }
+                        value = ctor();
+                        initted = true;
                     }
                 }
-                return value;
             }
+            return value;
         }
 
         /// <summary>
