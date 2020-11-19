@@ -12,13 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="FieldCache.tt" />
+    <None Remove="FieldCache.GetValue.tt" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="FieldCache.tt">
+    <Compile Include="FieldCache.GetValue.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>FieldCache.cs</LastGenOutput>
+      <LastGenOutput>FieldCache.GetValue.cs</LastGenOutput>
     </Compile>
   </ItemGroup>
 
@@ -27,10 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="FieldCache.cs">
+    <Compile Update="FieldCache.GetValue.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>FieldCache.tt</DependentUpon>
+      <DependentUpon>FieldCache.GetValue.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 

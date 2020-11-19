@@ -1,37 +1,10 @@
-﻿
-
-
-
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 
 namespace FieldCacheNamespace
 {
-    /// <summary>
-    /// Provides lazy initialization experience. Is better than the Lazy class as:
-    /// 1) Is a struct
-    /// 2) Does not affect record's Equals in a bad way Lazy does
-    /// <code>
-    /// public int MyProperty => myProperty; // same as myProperty.Value
-    /// public Container int myProperty = new(() => some method);
-    /// </code>
-    /// </summary>
-    /// <typeparam name="T">
-    /// The type to store inside
-    /// </typeparam>
-    public struct FieldCache<T> : IEquatable<FieldCache<T>>
+    partial struct FieldCache<T> : IEquatable<FieldCache<T>>
     {
-        //public FieldCache(object holder)
-        //{
-        //    this.holder = holder;
-        //    value = default;
-        //    initted = false;
-        //}
-        //
-        //private object holder;
-        private T value;
-        private bool initted;
-
         
         /// <summary>
         /// Use this in your property's getter
@@ -41,8 +14,10 @@ namespace FieldCacheNamespace
         public T GetValue
 
 (in Func<
-        
-T> ctor)
+    
+T> ctor
+
+)
         {
             if (!initted)
             {
@@ -50,7 +25,9 @@ T> ctor)
                 {
                     if (!initted)
                     {
-                        value = ctor();
+                        value = ctor(
+
+);
                         initted = true;
                     }
                 }
@@ -65,16 +42,20 @@ T> ctor)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T GetValue
 
-<
-T0
-
->
+    <
+    T0
+    
+    >
 
 (in Func<
-        
+    
         T0, 
+    
+T> ctor
 
-T> ctor)
+        , T0 arg0
+
+)
         {
             if (!initted)
             {
@@ -82,7 +63,12 @@ T> ctor)
                 {
                     if (!initted)
                     {
-                        value = ctor();
+                        value = ctor(
+
+arg0
+
+
+);
                         initted = true;
                     }
                 }
@@ -97,20 +83,26 @@ T> ctor)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T GetValue
 
-<
-T0
-
-        , T1
-
->
+    <
+    T0
+    
+            , T1
+    
+    >
 
 (in Func<
-        
+    
         T0, 
-
+    
         T1, 
+    
+T> ctor
 
-T> ctor)
+        , T0 arg0
+
+        , T1 arg1
+
+)
         {
             if (!initted)
             {
@@ -118,7 +110,14 @@ T> ctor)
                 {
                     if (!initted)
                     {
-                        value = ctor();
+                        value = ctor(
+
+arg0
+
+        , arg1
+
+
+);
                         initted = true;
                     }
                 }
@@ -133,24 +132,32 @@ T> ctor)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T GetValue
 
-<
-T0
-
-        , T1
-
-        , T2
-
->
+    <
+    T0
+    
+            , T1
+    
+            , T2
+    
+    >
 
 (in Func<
-        
+    
         T0, 
-
+    
         T1, 
-
+    
         T2, 
+    
+T> ctor
 
-T> ctor)
+        , T0 arg0
+
+        , T1 arg1
+
+        , T2 arg2
+
+)
         {
             if (!initted)
             {
@@ -158,7 +165,16 @@ T> ctor)
                 {
                     if (!initted)
                     {
-                        value = ctor();
+                        value = ctor(
+
+arg0
+
+        , arg1
+
+        , arg2
+
+
+);
                         initted = true;
                     }
                 }
@@ -173,28 +189,38 @@ T> ctor)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T GetValue
 
-<
-T0
-
-        , T1
-
-        , T2
-
-        , T3
-
->
+    <
+    T0
+    
+            , T1
+    
+            , T2
+    
+            , T3
+    
+    >
 
 (in Func<
-        
+    
         T0, 
-
+    
         T1, 
-
+    
         T2, 
-
+    
         T3, 
+    
+T> ctor
 
-T> ctor)
+        , T0 arg0
+
+        , T1 arg1
+
+        , T2 arg2
+
+        , T3 arg3
+
+)
         {
             if (!initted)
             {
@@ -202,7 +228,18 @@ T> ctor)
                 {
                     if (!initted)
                     {
-                        value = ctor();
+                        value = ctor(
+
+arg0
+
+        , arg1
+
+        , arg2
+
+        , arg3
+
+
+);
                         initted = true;
                     }
                 }
@@ -217,32 +254,44 @@ T> ctor)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T GetValue
 
-<
-T0
-
-        , T1
-
-        , T2
-
-        , T3
-
-        , T4
-
->
+    <
+    T0
+    
+            , T1
+    
+            , T2
+    
+            , T3
+    
+            , T4
+    
+    >
 
 (in Func<
-        
+    
         T0, 
-
+    
         T1, 
-
+    
         T2, 
-
+    
         T3, 
-
+    
         T4, 
+    
+T> ctor
 
-T> ctor)
+        , T0 arg0
+
+        , T1 arg1
+
+        , T2 arg2
+
+        , T3 arg3
+
+        , T4 arg4
+
+)
         {
             if (!initted)
             {
@@ -250,7 +299,20 @@ T> ctor)
                 {
                     if (!initted)
                     {
-                        value = ctor();
+                        value = ctor(
+
+arg0
+
+        , arg1
+
+        , arg2
+
+        , arg3
+
+        , arg4
+
+
+);
                         initted = true;
                     }
                 }
@@ -265,36 +327,50 @@ T> ctor)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T GetValue
 
-<
-T0
-
-        , T1
-
-        , T2
-
-        , T3
-
-        , T4
-
-        , T5
-
->
+    <
+    T0
+    
+            , T1
+    
+            , T2
+    
+            , T3
+    
+            , T4
+    
+            , T5
+    
+    >
 
 (in Func<
-        
+    
         T0, 
-
+    
         T1, 
-
+    
         T2, 
-
+    
         T3, 
-
+    
         T4, 
-
+    
         T5, 
+    
+T> ctor
 
-T> ctor)
+        , T0 arg0
+
+        , T1 arg1
+
+        , T2 arg2
+
+        , T3 arg3
+
+        , T4 arg4
+
+        , T5 arg5
+
+)
         {
             if (!initted)
             {
@@ -302,7 +378,22 @@ T> ctor)
                 {
                     if (!initted)
                     {
-                        value = ctor();
+                        value = ctor(
+
+arg0
+
+        , arg1
+
+        , arg2
+
+        , arg3
+
+        , arg4
+
+        , arg5
+
+
+);
                         initted = true;
                     }
                 }
@@ -317,40 +408,56 @@ T> ctor)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T GetValue
 
-<
-T0
-
-        , T1
-
-        , T2
-
-        , T3
-
-        , T4
-
-        , T5
-
-        , T6
-
->
+    <
+    T0
+    
+            , T1
+    
+            , T2
+    
+            , T3
+    
+            , T4
+    
+            , T5
+    
+            , T6
+    
+    >
 
 (in Func<
-        
+    
         T0, 
-
+    
         T1, 
-
+    
         T2, 
-
+    
         T3, 
-
+    
         T4, 
-
+    
         T5, 
-
+    
         T6, 
+    
+T> ctor
 
-T> ctor)
+        , T0 arg0
+
+        , T1 arg1
+
+        , T2 arg2
+
+        , T3 arg3
+
+        , T4 arg4
+
+        , T5 arg5
+
+        , T6 arg6
+
+)
         {
             if (!initted)
             {
@@ -358,7 +465,24 @@ T> ctor)
                 {
                     if (!initted)
                     {
-                        value = ctor();
+                        value = ctor(
+
+arg0
+
+        , arg1
+
+        , arg2
+
+        , arg3
+
+        , arg4
+
+        , arg5
+
+        , arg6
+
+
+);
                         initted = true;
                     }
                 }
@@ -373,44 +497,62 @@ T> ctor)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T GetValue
 
-<
-T0
-
-        , T1
-
-        , T2
-
-        , T3
-
-        , T4
-
-        , T5
-
-        , T6
-
-        , T7
-
->
+    <
+    T0
+    
+            , T1
+    
+            , T2
+    
+            , T3
+    
+            , T4
+    
+            , T5
+    
+            , T6
+    
+            , T7
+    
+    >
 
 (in Func<
-        
+    
         T0, 
-
+    
         T1, 
-
+    
         T2, 
-
+    
         T3, 
-
+    
         T4, 
-
+    
         T5, 
-
+    
         T6, 
-
+    
         T7, 
+    
+T> ctor
 
-T> ctor)
+        , T0 arg0
+
+        , T1 arg1
+
+        , T2 arg2
+
+        , T3 arg3
+
+        , T4 arg4
+
+        , T5 arg5
+
+        , T6 arg6
+
+        , T7 arg7
+
+)
         {
             if (!initted)
             {
@@ -418,7 +560,26 @@ T> ctor)
                 {
                     if (!initted)
                     {
-                        value = ctor();
+                        value = ctor(
+
+arg0
+
+        , arg1
+
+        , arg2
+
+        , arg3
+
+        , arg4
+
+        , arg5
+
+        , arg6
+
+        , arg7
+
+
+);
                         initted = true;
                     }
                 }
@@ -433,48 +594,68 @@ T> ctor)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T GetValue
 
-<
-T0
-
-        , T1
-
-        , T2
-
-        , T3
-
-        , T4
-
-        , T5
-
-        , T6
-
-        , T7
-
-        , T8
-
->
+    <
+    T0
+    
+            , T1
+    
+            , T2
+    
+            , T3
+    
+            , T4
+    
+            , T5
+    
+            , T6
+    
+            , T7
+    
+            , T8
+    
+    >
 
 (in Func<
-        
+    
         T0, 
-
+    
         T1, 
-
+    
         T2, 
-
+    
         T3, 
-
+    
         T4, 
-
+    
         T5, 
-
+    
         T6, 
-
+    
         T7, 
-
+    
         T8, 
+    
+T> ctor
 
-T> ctor)
+        , T0 arg0
+
+        , T1 arg1
+
+        , T2 arg2
+
+        , T3 arg3
+
+        , T4 arg4
+
+        , T5 arg5
+
+        , T6 arg6
+
+        , T7 arg7
+
+        , T8 arg8
+
+)
         {
             if (!initted)
             {
@@ -482,7 +663,28 @@ T> ctor)
                 {
                     if (!initted)
                     {
-                        value = ctor();
+                        value = ctor(
+
+arg0
+
+        , arg1
+
+        , arg2
+
+        , arg3
+
+        , arg4
+
+        , arg5
+
+        , arg6
+
+        , arg7
+
+        , arg8
+
+
+);
                         initted = true;
                     }
                 }
@@ -490,22 +692,5 @@ T> ctor)
             return value;
         }
         
-
-        /// <summary>
-        /// So that when records get compared, this field will not affect the result
-        /// </summary>
-        public bool Equals(FieldCache<T> _)
-            => true;
-
-        /// <summary>
-        /// So that when records get compared, this field will not affect the result
-        /// </summary>
-        public override bool Equals(object obj)
-            => true;
-
-        /// <summary>
-        /// So that when records get compared, this field will not affect the result
-        /// </summary>
-        public override int GetHashCode() => 0;
     }
 }
