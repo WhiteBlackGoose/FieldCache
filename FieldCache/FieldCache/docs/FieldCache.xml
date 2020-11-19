@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FieldCache</name>
+    </assembly>
+    <members>
+        <member name="T:FieldCacheNamespace.ConstructorReturnedNullException">
+            <summary>
+            Thrown when user's factory
+            </summary>
+        </member>
+        <member name="T:FieldCacheNamespace.FieldCache`1">
+            <summary>
+            Provides lazy initialization experience. Is better than the Lazy class as:
+            1) Is a struct
+            2) Does not affect record's Equals in a bad way Lazy does
+            <code>
+            public int MyProperty => myProperty; // same as myProperty.Value
+            public Container int myProperty = new(() => some method);
+            </code>
+            </summary>
+            <typeparam name="T">
+            The type to store inside
+            </typeparam>
+        </member>
+        <member name="M:FieldCacheNamespace.FieldCache`1.Equals(FieldCacheNamespace.FieldCache{`0})">
+            <summary>
+            So that when records get compared, this field will not affect the result
+            </summary>
+        </member>
+        <member name="M:FieldCacheNamespace.FieldCache`1.Equals(System.Object)">
+            <summary>
+            So that when records get compared, this field will not affect the result
+            </summary>
+        </member>
+        <member name="M:FieldCacheNamespace.FieldCache`1.GetHashCode">
+            <summary>
+            So that when records get compared, this field will not affect the result
+            </summary>
+        </member>
+        <member name="M:FieldCacheNamespace.FieldCache`1.GetValue(System.Func{`0}@)">
+            <summary>
+            Use this in your property's getter
+            </summary>
+            <param name="ctor">Expression to initialize the given property</param>
+        </member>
+        <member name="M:FieldCacheNamespace.FieldCache`1.GetValue``1(System.Func{``0,`0}@,``0)">
+            <summary>
+            Use this in your property's getter
+            </summary>
+            <param name="ctor">Expression to initialize the given property</param>
+            <param name="arg0">1-th argument to be passed in the factory lambda</param>
+        </member>
+        <member name="M:FieldCacheNamespace.FieldCache`1.GetValue``2(System.Func{``0,``1,`0}@,``0,``1)">
+            <summary>
+            Use this in your property's getter
+            </summary>
+            <param name="ctor">Expression to initialize the given property</param>
+            <param name="arg0">1-th argument to be passed in the factory lambda</param>
+            <param name="arg1">2-th argument to be passed in the factory lambda</param>
+        </member>
+        <member name="M:FieldCacheNamespace.FieldCache`1.GetValue``3(System.Func{``0,``1,``2,`0}@,``0,``1,``2)">
+            <summary>
+            Use this in your property's getter
+            </summary>
+            <param name="ctor">Expression to initialize the given property</param>
+            <param name="arg0">1-th argument to be passed in the factory lambda</param>
+            <param name="arg1">2-th argument to be passed in the factory lambda</param>
+            <param name="arg2">3-th argument to be passed in the factory lambda</param>
+        </member>
+        <member name="M:FieldCacheNamespace.FieldCache`1.GetValue``4(System.Func{``0,``1,``2,``3,`0}@,``0,``1,``2,``3)">
+            <summary>
+            Use this in your property's getter
+            </summary>
+            <param name="ctor">Expression to initialize the given property</param>
+            <param name="arg0">1-th argument to be passed in the factory lambda</param>
+            <param name="arg1">2-th argument to be passed in the factory lambda</param>
+            <param name="arg2">3-th argument to be passed in the factory lambda</param>
+            <param name="arg3">4-th argument to be passed in the factory lambda</param>
+        </member>
+        <member name="M:FieldCacheNamespace.FieldCache`1.GetValue``5(System.Func{``0,``1,``2,``3,``4,`0}@,``0,``1,``2,``3,``4)">
+            <summary>
+            Use this in your property's getter
+            </summary>
+            <param name="ctor">Expression to initialize the given property</param>
+            <param name="arg0">1-th argument to be passed in the factory lambda</param>
+            <param name="arg1">2-th argument to be passed in the factory lambda</param>
+            <param name="arg2">3-th argument to be passed in the factory lambda</param>
+            <param name="arg3">4-th argument to be passed in the factory lambda</param>
+            <param name="arg4">5-th argument to be passed in the factory lambda</param>
+        </member>
+        <member name="M:FieldCacheNamespace.FieldCache`1.GetValue``6(System.Func{``0,``1,``2,``3,``4,``5,`0}@,``0,``1,``2,``3,``4,``5)">
+            <summary>
+            Use this in your property's getter
+            </summary>
+            <param name="ctor">Expression to initialize the given property</param>
+            <param name="arg0">1-th argument to be passed in the factory lambda</param>
+            <param name="arg1">2-th argument to be passed in the factory lambda</param>
+            <param name="arg2">3-th argument to be passed in the factory lambda</param>
+            <param name="arg3">4-th argument to be passed in the factory lambda</param>
+            <param name="arg4">5-th argument to be passed in the factory lambda</param>
+            <param name="arg5">6-th argument to be passed in the factory lambda</param>
+        </member>
+        <member name="M:FieldCacheNamespace.FieldCache`1.GetValue``7(System.Func{``0,``1,``2,``3,``4,``5,``6,`0}@,``0,``1,``2,``3,``4,``5,``6)">
+            <summary>
+            Use this in your property's getter
+            </summary>
+            <param name="ctor">Expression to initialize the given property</param>
+            <param name="arg0">1-th argument to be passed in the factory lambda</param>
+            <param name="arg1">2-th argument to be passed in the factory lambda</param>
+            <param name="arg2">3-th argument to be passed in the factory lambda</param>
+            <param name="arg3">4-th argument to be passed in the factory lambda</param>
+            <param name="arg4">5-th argument to be passed in the factory lambda</param>
+            <param name="arg5">6-th argument to be passed in the factory lambda</param>
+            <param name="arg6">7-th argument to be passed in the factory lambda</param>
+        </member>
+        <member name="M:FieldCacheNamespace.FieldCache`1.GetValue``8(System.Func{``0,``1,``2,``3,``4,``5,``6,``7,`0}@,``0,``1,``2,``3,``4,``5,``6,``7)">
+            <summary>
+            Use this in your property's getter
+            </summary>
+            <param name="ctor">Expression to initialize the given property</param>
+            <param name="arg0">1-th argument to be passed in the factory lambda</param>
+            <param name="arg1">2-th argument to be passed in the factory lambda</param>
+            <param name="arg2">3-th argument to be passed in the factory lambda</param>
+            <param name="arg3">4-th argument to be passed in the factory lambda</param>
+            <param name="arg4">5-th argument to be passed in the factory lambda</param>
+            <param name="arg5">6-th argument to be passed in the factory lambda</param>
+            <param name="arg6">7-th argument to be passed in the factory lambda</param>
+            <param name="arg7">8-th argument to be passed in the factory lambda</param>
+        </member>
+        <member name="M:FieldCacheNamespace.FieldCache`1.GetValue``9(System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,`0}@,``0,``1,``2,``3,``4,``5,``6,``7,``8)">
+            <summary>
+            Use this in your property's getter
+            </summary>
+            <param name="ctor">Expression to initialize the given property</param>
+            <param name="arg0">1-th argument to be passed in the factory lambda</param>
+            <param name="arg1">2-th argument to be passed in the factory lambda</param>
+            <param name="arg2">3-th argument to be passed in the factory lambda</param>
+            <param name="arg3">4-th argument to be passed in the factory lambda</param>
+            <param name="arg4">5-th argument to be passed in the factory lambda</param>
+            <param name="arg5">6-th argument to be passed in the factory lambda</param>
+            <param name="arg6">7-th argument to be passed in the factory lambda</param>
+            <param name="arg7">8-th argument to be passed in the factory lambda</param>
+            <param name="arg8">9-th argument to be passed in the factory lambda</param>
+        </member>
+    </members>
+</doc>

@@ -82,5 +82,65 @@ namespace Tests
             var b = new Person("John", "Ivanov");
             Assert.AreNotEqual(a, b);
         }
+
+        private record Person_static(string FirstName, string LastName)
+        {
+            public string FullName => fullName.GetValue((a, b) => a + b, FirstName, LastName);
+            private FieldCache<string> fullName;
+        }
+
+        [TestMethod]
+        public void TestEqualityPure_static()
+        {
+            var a = new Person_static("John", "Ivanov");
+            var b = new Person_static("John", "Ivanov");
+            Assert.AreEqual(a, b);
+        }
+
+        [TestMethod]
+        public void TestEqualityOneInitted_static()
+        {
+            var a = new Person_static("John", "Ivanov");
+            Assert.AreEqual("JohnIvanov", a.FullName);
+            var b = new Person_static("John", "Ivanov");
+            Assert.AreEqual(a, b);
+        }
+
+        [TestMethod]
+        public void TestEqualityBothInitted_static()
+        {
+            var a = new Person_static("John", "Ivanov");
+            Assert.AreEqual("JohnIvanov", a.FullName);
+            var b = new Person_static("John", "Ivanov");
+            Assert.AreEqual("JohnIvanov", b.FullName);
+            Assert.AreEqual(a, b);
+        }
+
+        [TestMethod]
+        public void TestUnequalityPure_static()
+        {
+            var a = new Person_static("Peter", "Smith");
+            var b = new Person_static("John", "Ivanov");
+            Assert.AreNotEqual(a, b);
+        }
+
+        private record SomeTestRecord_static
+        {
+            public ConcurrentDictionary<string, string> Dict => dict.GetValue(static () => new());
+            private FieldCache<ConcurrentDictionary<string, string>> dict;
+        }
+
+        [TestMethod]
+        public void TestThreadSafety_static()
+        {
+            SomeTestRecord_static someInstance = new SomeTestRecord_static();
+
+            void ChangeADict(int threadId)
+            {
+                someInstance.Dict["someSpecificKey"] = threadId.ToString();
+            }
+
+            new ThreadingChecker(ChangeADict).Run(iterCount: 10000);
+        }
     }
 }

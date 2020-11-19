@@ -4,22 +4,30 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.0-alpha.1</Version>
+    <Authors>WhiteBlackGoose</Authors>
+    <Company>Angouri</Company>
+    <Description>FieldCache is a good replacement for Lazy&lt;T&gt; for cases when: first, needed safe record comparison (Equals overriden to true). Second, when it is more convenient to pass lambda inside the method (e. g. when local fields to be taken into account)</Description>
+    <Copyright>Angouri 2020</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/WhiteBlackGoose/FieldCache</RepositoryUrl>
+    <PackageTags>record, safety</PackageTags>
+    <PackageReleaseNotes>First version</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <DocumentationFile>./docs/FieldCache.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="FieldCache.GetValue.tt" />
+    <Compile Remove="FieldCache.GetValue.tt" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="FieldCache.GetValue.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>FieldCache.GetValue.cs</LastGenOutput>
-    </Compile>
+    <None Remove="FieldCache.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +40,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>FieldCache.GetValue.tt</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="FieldCache.GetValue.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FieldCache.GetValue.cs</LastGenOutput>
+    </None>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
