@@ -17,11 +17,11 @@ public record Person(string FirstName, string LastName)
 }
 ```
 
-Fast option:
+Fast option (recommended):
 ```cs
 public record Person(string FirstName, string LastName)
 {
-	public string FullName => fullName.GetValue((a, b) => a + " " + b, FirstName, LastName);
+	public string FullName => fullName.GetValue(@this => @this.FirstName + " " + @this.SecondName, this);
 	private FieldCache<string> fullName;
 }
 ```
