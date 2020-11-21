@@ -5,7 +5,7 @@
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.0-alpha.1</Version>
+    <Version>1.0.0-alpha.2</Version>
     <Authors>WhiteBlackGoose</Authors>
     <Company>Angouri</Company>
     <Description>FieldCache is a good replacement for Lazy&lt;T&gt; for cases when: first, needed safe record comparison (Equals overriden to true). Second, when it is more convenient to pass lambda inside the method (e. g. when local fields to be taken into account)</Description>
@@ -13,7 +13,9 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/WhiteBlackGoose/FieldCache</RepositoryUrl>
     <PackageTags>record, safety</PackageTags>
-    <PackageReleaseNotes>First version</PackageReleaseNotes>
+    <PackageReleaseNotes>Strongly named</PackageReleaseNotes>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
