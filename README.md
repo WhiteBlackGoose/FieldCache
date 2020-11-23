@@ -14,7 +14,7 @@ you use `FieldCache`:
 ```cs
 public record Person(string FirstName, string LastName)
 {
-	public string FullName => fullName.GetValue(@this => @this.FirstName + " " + @this.SecondName, this);
+	public string FullName => fullName.GetValue(@this => @this.FirstName + " " + @this.LastName, this);
 	private FieldCache<string> fullName;
 }
 ```

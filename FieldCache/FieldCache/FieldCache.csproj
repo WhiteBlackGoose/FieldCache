@@ -18,7 +18,7 @@ This is a good use example:
 
 public record Person(string FirstName, string LastName)
 {
-	public string FullName =&gt; fullName.GetValue(@this =&gt; @this.FirstName + " " + @this.SecondName, this);
+	public string FullName =&gt; fullName.GetValue(@this =&gt; @this.FirstName + " " + @this.LastName, this);
 	private FieldCache&lt;string&gt; fullName;
 }</Description>
     <Copyright>Angouri 2020</Copyright>
