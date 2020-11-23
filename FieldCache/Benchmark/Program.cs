@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Running;
 using FieldCacheNamespace;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Benchmark
 {
@@ -43,10 +44,22 @@ namespace Benchmark
         private FieldCache<long> lcm;
     }
 
+    public record WorksWithConditionalWeakTableLambdaLcm(long a, long b)
+    {
+        public long Lcm => lcm.GetValue(this, static @this => new Wrapper<long>(Funcs.DumbAlgLcm(@this.a, @this.b)));
+        private readonly ConditionalWeakTable<WorksWithConditionalWeakTableLambdaLcm, Wrapper<long>> lcm = new();
+    }
+
+    public sealed record Wrapper<T>(T Value)
+    {
+        public static implicit operator T(Wrapper<T> wrapper) => wrapper.Value;
+    }
+
     public class ContainerPerformance
     {
         private WorksWithLazyLcm withLazy = new(Funcs.A, Funcs.B);
         private WorksWithFieldCacheStaticLambdaLcm withStaticCache = new(Funcs.A, Funcs.B);
+        private WorksWithConditionalWeakTableLambdaLcm worksWithConditionalWeakTableLambdaLcm = new(Funcs.A, Funcs.B);
 
         [Benchmark] public void BenchFunction() => Funcs.DumbAlgLcm(Funcs.A, Funcs.B);
 
@@ -57,9 +70,15 @@ namespace Benchmark
         }
 
         [Benchmark]
-        public void FieldStaticCacheT()
+        public void FieldCacheT()
         {
             var v = withStaticCache.Lcm;
+        }
+
+        [Benchmark]
+        public void ConditionalWeakTableT()
+        {
+            var v = worksWithConditionalWeakTableLambdaLcm.Lcm;
         }
     }
 

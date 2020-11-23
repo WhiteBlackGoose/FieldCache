@@ -24,10 +24,11 @@ or override `Equals` for all records which have cached fields.
 
 ### Benchmarks
 
-|            Method |          Mean |      Error |     StdDev |
-|------------------ |--------------:|-----------:|-----------:|
-|     BenchFunction | 4,599.1638 ns | 90.6775 ns | 80.3832 ns |
-|           Lazy<T> |     0.6717 ns |  0.0469 ns |  0.0501 ns |
-|     FieldCache<T> |     3.6674 ns |  0.0846 ns |  0.0750 ns |
+|                   Method |          Mean |      Error |     StdDev |
+|------------------------- |--------------:|-----------:|-----------:|
+|            BenchFunction | 4,599.1638 ns | 90.6775 ns | 80.3832 ns |
+|                  Lazy<T> |     0.6717 ns |  0.0469 ns |  0.0501 ns |
+|            FieldCache<T> |     3.6674 ns |  0.0846 ns |  0.0750 ns |
+| ConditionalWeakTable<,T> |    25.0521 ns |  0.4320 ns |  0.6056 ns |
 
 (needs improvement for sure XD)
