@@ -8,16 +8,9 @@ A good replacement for the `Lazy<T>` class. Why? Because
 
 ### Usage
 
-Slow option (because capturing causes reallocation):
-```cs
-public record Person(string FirstName, string LastName)
-{
-	public string FullName => fullName.GetValue(() => FirstName + " " + LastName);
-	private FieldCache<string> fullName;
-}
-```
-
-Fast option (recommended):
+Consider an immutable record `Person`, which has `FirstName` and `LastName`. It also has a property
+`FullName` which should be computed once (assume it's too expensive otherwise). Then, that is how
+you use `FieldCache`:
 ```cs
 public record Person(string FirstName, string LastName)
 {
@@ -31,11 +24,10 @@ or override `Equals` for all records which have cached fields.
 
 ### Benchmarks
 
-|            Method |          Mean |
-|------------------ |--------------:|
-|     BenchFunction | 4,609.6243 ns |
-|             LazyT |     0.7128 ns |
-|       FieldCacheT |    16.1614 ns |
-| FieldStaticCacheT |     5.1907 ns |
+|            Method |          Mean |      Error |     StdDev |
+|------------------ |--------------:|-----------:|-----------:|
+|     BenchFunction | 4,599.1638 ns | 90.6775 ns | 80.3832 ns |
+|           Lazy<T> |     0.6717 ns |  0.0469 ns |  0.0501 ns |
+|     FieldCache<T> |     3.6674 ns |  0.0846 ns |  0.0750 ns |
 
 (needs improvement for sure XD)

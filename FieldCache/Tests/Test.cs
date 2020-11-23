@@ -11,21 +11,21 @@ namespace Tests
         public void TestSimple1()
         {
             var container = new FieldCache<int>();
-            Assert.AreEqual(4, container.GetValue(() => 4));
-            Assert.AreEqual(4, container.GetValue(() => 4));
+            Assert.AreEqual(4, container.GetValue(_ => 4, this));
+            Assert.AreEqual(4, container.GetValue(_ => 4, this));
         }
 
         [TestMethod]
         public void TestSimpleString()
         {
             var container = new FieldCache<string>();
-            Assert.AreEqual("ss", container.GetValue(() => "ss"));
-            Assert.AreEqual("ss", container.GetValue(() => "ss"));
+            Assert.AreEqual("ss", container.GetValue(_ => "ss", this));
+            Assert.AreEqual("ss", container.GetValue(_ => "ss", this));
         }
 
         private record SomeTestRecord
         {
-            public ConcurrentDictionary<string, string> Dict => dict.GetValue(() => new());
+            public ConcurrentDictionary<string, string> Dict => dict.GetValue(_ => new(), this);
             private FieldCache<ConcurrentDictionary<string, string>> dict;
         }
 
@@ -44,7 +44,7 @@ namespace Tests
 
         private record Person(string FirstName, string LastName)
         {
-            public string FullName => fullName.GetValue(() => FirstName + LastName);
+            public string FullName => fullName.GetValue(@this => @this.FirstName + " " + @this.LastName, this);
             private FieldCache<string> fullName;
         }
 
@@ -60,7 +60,7 @@ namespace Tests
         public void TestEqualityOneInitted()
         {
             var a = new Person("John", "Ivanov");
-            Assert.AreEqual("JohnIvanov", a.FullName);
+            Assert.AreEqual("John Ivanov", a.FullName);
             var b = new Person("John", "Ivanov");
             Assert.AreEqual(a, b);
         }
@@ -69,9 +69,9 @@ namespace Tests
         public void TestEqualityBothInitted()
         {
             var a = new Person("John", "Ivanov");
-            Assert.AreEqual("JohnIvanov", a.FullName);
+            Assert.AreEqual("John Ivanov", a.FullName);
             var b = new Person("John", "Ivanov");
-            Assert.AreEqual("JohnIvanov", b.FullName);
+            Assert.AreEqual("John Ivanov", b.FullName);
             Assert.AreEqual(a, b);
         }
 
@@ -83,50 +83,9 @@ namespace Tests
             Assert.AreNotEqual(a, b);
         }
 
-        private record Person_static(string FirstName, string LastName)
-        {
-            public string FullName => fullName.GetValue((a, b) => a + b, FirstName, LastName);
-            private FieldCache<string> fullName;
-        }
-
-        [TestMethod]
-        public void TestEqualityPure_static()
-        {
-            var a = new Person_static("John", "Ivanov");
-            var b = new Person_static("John", "Ivanov");
-            Assert.AreEqual(a, b);
-        }
-
-        [TestMethod]
-        public void TestEqualityOneInitted_static()
-        {
-            var a = new Person_static("John", "Ivanov");
-            Assert.AreEqual("JohnIvanov", a.FullName);
-            var b = new Person_static("John", "Ivanov");
-            Assert.AreEqual(a, b);
-        }
-
-        [TestMethod]
-        public void TestEqualityBothInitted_static()
-        {
-            var a = new Person_static("John", "Ivanov");
-            Assert.AreEqual("JohnIvanov", a.FullName);
-            var b = new Person_static("John", "Ivanov");
-            Assert.AreEqual("JohnIvanov", b.FullName);
-            Assert.AreEqual(a, b);
-        }
-
-        [TestMethod]
-        public void TestUnequalityPure_static()
-        {
-            var a = new Person_static("Peter", "Smith");
-            var b = new Person_static("John", "Ivanov");
-            Assert.AreNotEqual(a, b);
-        }
-
         private record SomeTestRecord_static
         {
-            public ConcurrentDictionary<string, string> Dict => dict.GetValue(static () => new());
+            public ConcurrentDictionary<string, string> Dict => dict.GetValue(_ => new(), this);
             private FieldCache<ConcurrentDictionary<string, string>> dict;
         }
 
@@ -141,6 +100,24 @@ namespace Tests
             }
 
             new ThreadingChecker(ChangeADict).Run(iterCount: 10000);
+        }
+
+        [TestMethod]
+        public void WithAlsoShouldWork1()
+        {
+            var personJohnSmith = new Person("John", "Smith");
+            var personTonySmith = personJohnSmith with { FirstName = "Tony" };
+            Assert.AreEqual("John Smith", personJohnSmith.FullName);
+            Assert.AreEqual("Tony Smith", personTonySmith.FullName);
+        }
+
+        [TestMethod]
+        public void WithAlsoShouldWork2()
+        {
+            var personJohnSmith = new Person("John", "Smith");
+            Assert.AreEqual("John Smith", personJohnSmith.FullName);
+            var personTonySmith = personJohnSmith with { FirstName = "Tony" };
+            Assert.AreEqual("Tony Smith", personTonySmith.FullName);
         }
     }
 }

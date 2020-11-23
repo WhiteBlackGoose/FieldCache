@@ -5,15 +5,27 @@
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.0-alpha.2</Version>
+    <Version>1.0.0-alpha.3</Version>
     <Authors>WhiteBlackGoose</Authors>
     <Company>Angouri</Company>
-    <Description>FieldCache is a good replacement for Lazy&lt;T&gt; for cases when: first, needed safe record comparison (Equals overriden to true). Second, when it is more convenient to pass lambda inside the method (e. g. when local fields to be taken into account)</Description>
+    <Description>FieldCache is a good replacement for Lazy&lt;T&gt; for cases when: 
+
+First, needed safe record comparison (Equals overriden to true).
+
+Second, when it is more convenient to pass lambda inside the method (e. g. when local fields to be taken into account).
+
+This is a good use example:
+
+public record Person(string FirstName, string LastName)
+{
+	public string FullName =&gt; fullName.GetValue(@this =&gt; @this.FirstName + " " + @this.SecondName, this);
+	private FieldCache&lt;string&gt; fullName;
+}</Description>
     <Copyright>Angouri 2020</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/WhiteBlackGoose/FieldCache</RepositoryUrl>
     <PackageTags>record, safety</PackageTags>
-    <PackageReleaseNotes>Strongly named</PackageReleaseNotes>
+    <PackageReleaseNotes>Bug related to "with" fixed (now instead of boolean holder's references are checked)</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -25,10 +37,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="FieldCache.GetValue.tt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="FieldCache.xml" />
   </ItemGroup>
 
@@ -37,18 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="FieldCache.GetValue.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>FieldCache.GetValue.tt</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="FieldCache.GetValue.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>FieldCache.GetValue.cs</LastGenOutput>
-    </None>
     <None Include="..\..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

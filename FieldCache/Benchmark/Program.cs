@@ -37,22 +37,15 @@ namespace Benchmark
         }
     }
 
-    public record WorksWithFieldCacheLcm(long a, long b)
-    {
-        public long Lcm => lcm.GetValue(() => Funcs.DumbAlgLcm(this.a, this.b));
-        private FieldCache<long> lcm;
-    }
-
     public record WorksWithFieldCacheStaticLambdaLcm(long a, long b)
     {
-        public long Lcm => lcm.GetValue((a, b) => Funcs.DumbAlgLcm(a, b), a, b);
+        public long Lcm => lcm.GetValue(static @this => Funcs.DumbAlgLcm(@this.a, @this.b), this);
         private FieldCache<long> lcm;
     }
 
     public class ContainerPerformance
     {
         private WorksWithLazyLcm withLazy = new(Funcs.A, Funcs.B);
-        private WorksWithFieldCacheLcm withCache = new(Funcs.A, Funcs.B);
         private WorksWithFieldCacheStaticLambdaLcm withStaticCache = new(Funcs.A, Funcs.B);
 
         [Benchmark] public void BenchFunction() => Funcs.DumbAlgLcm(Funcs.A, Funcs.B);
@@ -61,12 +54,6 @@ namespace Benchmark
         public void LazyT()
         {
             var v = withLazy.Lcm;
-        }
-
-        [Benchmark]
-        public void FieldCacheT()
-        {
-            var v = withCache.Lcm;
         }
 
         [Benchmark]
