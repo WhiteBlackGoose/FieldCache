@@ -27,7 +27,7 @@ or override `Equals` for all records which have cached fields.
 > 3. Makes an allocation we don't need in our case.
 
 #### 2. Why are `Equals` and `GetHashCode` overrided to true and 0?
-> The values obtained by `FieldCache`'s factory must be *secondary* properties of the record. For example, for `MyInteger` the primary property is `int Value`. One of its secondary properties might be `MyInteger Tripled` defined as `Tripled => tripled.GetValue(@this => new MyInteger(@this.Value * 3), this)`. You can see, the comparison remains absoltely valid, since you don't want to compare by their secondary properties, only by those primary.
+> The values obtained by `FieldCache`'s factory must be *secondary* properties of the record. For example, for `MyInteger` the primary property is `int Value`. One of its secondary properties might be `MyInteger Tripled` defined as `Tripled => tripled.GetValue(@this => new MyInteger(@this.Value * 3), this)`. You can see, the comparison remains absolutely valid, since you don't want to compare by their secondary properties, only by those primary.
 
 #### 3. Why do we pass the factory into `GetValue`, not in the ctor?
 > Because if you needed to pass it in the constructor, you would need to have a record's constructor, where you would be creating all those `FieldCache` for each field. This is not a good code, poorly maintainable and non-obvious. Your initialization will be separated from the properties to which your values are exposed. While here this delegate is passed right in the secondary property.
