@@ -44,6 +44,13 @@ namespace Benchmark
         private FieldCache<long> lcm;
     }
 
+    public record WorksWithFieldCacheStaticLambdaCachedLcm(long a, long b)
+    {
+        private static Func<WorksWithFieldCacheStaticLambdaCachedLcm, long> lambda = static @this => Funcs.DumbAlgLcm(@this.a, @this.b);
+        public long Lcm => lcm.GetValue(lambda, this);
+        private FieldCache<long> lcm;
+    }
+
     public record WorksWithConditionalWeakTableLambdaLcm(long a, long b)
     {
         public long Lcm => lcm.GetValue(this, static @this => new Wrapper<long>(Funcs.DumbAlgLcm(@this.a, @this.b)));
@@ -59,6 +66,7 @@ namespace Benchmark
     {
         private WorksWithLazyLcm withLazy = new(Funcs.A, Funcs.B);
         private WorksWithFieldCacheStaticLambdaLcm withStaticCache = new(Funcs.A, Funcs.B);
+        private WorksWithFieldCacheStaticLambdaCachedLcm withStaticCacheLambdaCached = new(Funcs.A, Funcs.B);
         private WorksWithConditionalWeakTableLambdaLcm worksWithConditionalWeakTableLambdaLcm = new(Funcs.A, Funcs.B);
 
         [Benchmark] public void BenchFunction() => Funcs.DumbAlgLcm(Funcs.A, Funcs.B);
@@ -73,6 +81,12 @@ namespace Benchmark
         public void FieldCacheT()
         {
             var v = withStaticCache.Lcm;
+        }
+
+        [Benchmark]
+        public void FieldCacheLambdaCachedT()
+        {
+            var v = withStaticCacheLambdaCached.Lcm;
         }
 
         [Benchmark]
