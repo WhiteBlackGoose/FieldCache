@@ -5,29 +5,20 @@
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>WhiteBlackGoose</Authors>
     <Company>Angouri</Company>
-    <Description>FieldCache is a good replacement for Lazy&lt;T&gt; for cases when: 
-
-First, needed safe record comparison (Equals overriden to true).
-
-Second, when it is more convenient to pass lambda inside the method (e. g. when local fields to be taken into account).
-
-This is a good use example:
-
-public record Person(string FirstName, string LastName)
-{
-	public string FullName =&gt; fullName.GetValue(@this =&gt; @this.FirstName + " " + @this.LastName, this);
-	private FieldCache&lt;string&gt; fullName;
-}</Description>
-    <Copyright>Angouri 2020</Copyright>
+    <Description>FieldCache is a good replacement for Lazy&lt;T&gt; for records, when you don't want to override default ctor/equals/etc, but you want a property to be lazily initialized. See the repo https://github.com/WhiteBlackGoose/FieldCache</Description>
+    <Copyright>WhiteBlackGoose 2020-2021</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/WhiteBlackGoose/FieldCache</RepositoryUrl>
     <PackageTags>record, safety</PackageTags>
-    <PackageReleaseNotes>Boosted (about 1.5ns faster (3.8 to 2.3) in case you create the lambda every time. If you store it in a private field, the time needed to access it is approximately 0.4-0.8ns).</PackageReleaseNotes>
+    <PackageReleaseNotes>Boosted. Now it's as fast as Lazy's Value, but the API had to be changed.</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+    <RepositoryType>public</RepositoryType>
+    <PackageIcon>ico1.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/WhiteBlackGoose/FieldCache</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -38,6 +29,10 @@ public record Person(string FirstName, string LastName)
 
   <ItemGroup>
     <None Remove="FieldCache.xml" />
+    <None Include="..\..\ico1.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
