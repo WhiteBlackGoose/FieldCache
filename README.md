@@ -39,10 +39,10 @@ or override `Equals` for all records which have cached fields.
 
 |                  Method |          Mean |      Error |      StdDev |
 |------------------------ |--------------:|-----------:|------------:|
-|           BenchFunction | 4,681.5728 ns | 92.8252 ns | 195.7999 ns |
-|                   LazyT |     0.2859 ns |  0.0474 ns |   0.0526 ns |
-|             FieldCacheT |     3.8675 ns |  0.1212 ns |   0.2531 ns |
-| FieldCacheLambdaCachedT |     2.6239 ns |  0.0941 ns |   0.1858 ns |
-|   ConditionalWeakTableT |    24.5858 ns |  0.5294 ns |   0.8084 ns |
+|           BenchFunction | 4,583.8618 ns | 90.0384 ns | 123.2456 ns |
+|                   LazyT |     0.6009 ns |  0.0524 ns |   0.0846 ns |
+|             FieldCacheT |     2.3416 ns |  0.0775 ns |   0.0725 ns |
+| FieldCacheLambdaCachedT |     0.4180 ns |  0.0429 ns |   0.0826 ns |
+|   ConditionalWeakTableT |    23.6355 ns |  0.5082 ns |   0.5649 ns |
 
 (needs improvement for sure XD)

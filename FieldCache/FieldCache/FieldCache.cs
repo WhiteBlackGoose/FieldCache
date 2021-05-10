@@ -19,8 +19,8 @@ namespace FieldCacheNamespace
     /// </typeparam>
     public partial struct FieldCache<T> : IEquatable<FieldCache<T>>
     {
-        private T value;
-        private object holder;
+        private T value { get; set; }
+        private object holder { get; set; }
 
         /// <summary>
         /// So that when records get compared, this field will not affect the result
@@ -39,6 +39,21 @@ namespace FieldCacheNamespace
         /// </summary>
         public override int GetHashCode() => 0;
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private T CreateValue<TThis>(Func<TThis, T> factory, TThis @this) where TThis : class
+        {
+            if (!ReferenceEquals(@this, holder))
+                lock (@this)
+                {
+                    if (!ReferenceEquals(@this, holder))
+                    {
+                        value = factory(@this);
+                        holder = @this;
+                    }
+                }
+            return value;
+        }
+
         /// <summary>
         /// It is guaranteed that <paramref name="factory"/> is called only once
         /// throughout all threads
@@ -55,16 +70,10 @@ namespace FieldCacheNamespace
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T GetValue<TThis>(Func<TThis, T> factory, TThis @this) where TThis : class
         {
-            if (!ReferenceEquals(@this, holder))
-                lock (@this)
-                {
-                    if (!ReferenceEquals(@this, holder))
-                    {
-                        value = factory(@this);
-                        holder = @this;
-                    }
-                }
-            return value;
+            if (ReferenceEquals(@this, holder))
+                return value;
+
+            return CreateValue(factory, @this);
         }
 
     }

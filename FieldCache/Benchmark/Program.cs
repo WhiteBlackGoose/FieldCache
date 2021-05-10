@@ -34,7 +34,7 @@ namespace Benchmark
         {
             this.a = a;
             this.b = b;
-            lcm = new(() => Funcs.DumbAlgLcm(this.a, this.b));
+            lcm = new(() => Funcs.DumbAlgLcm(this.a, this.b), isThreadSafe: true);
         }
     }
 
