@@ -10,17 +10,17 @@ namespace FieldCacheNamespace
     /// 1) Is a struct
     /// 2) Does not affect record's Equals in a bad way Lazy does
     /// <code>
-    /// public int MyProperty => myProperty; // same as myProperty.Value
-    /// public Container int myProperty = new(() => some method);
+    /// public int MyProperty => myProperty.GetValue(static @this => @this.SomeComplexMethod(), @this);
+    /// public FieldCache int myProperty;
     /// </code>
     /// </summary>
     /// <typeparam name="T">
     /// The type to store inside
     /// </typeparam>
-    public partial struct FieldCache<T> : IEquatable<FieldCache<T>>
+    public struct FieldCache<T> : IEquatable<FieldCache<T>>
     {
-        private T value { get; set; }
-        private object holder { get; set; }
+        private T value;
+        private object holder;
 
         /// <summary>
         /// So that when records get compared, this field will not affect the result
