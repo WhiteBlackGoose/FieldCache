@@ -51,6 +51,14 @@ namespace Benchmark
         private FieldCache<long> lcm;
     }
 
+    public record WorksWithFieldCacheStaticLambdaCachedLocallyLcm(long a, long b)
+    {
+        public long Lcm => lcm.GetValue(localLambda, this);
+        private FieldCache<long> lcm;
+        private Func<WorksWithFieldCacheStaticLambdaCachedLocallyLcm, long> localLambda = lambda;
+        private static Func<WorksWithFieldCacheStaticLambdaCachedLocallyLcm, long> lambda = static @this => Funcs.DumbAlgLcm(@this.a, @this.b);
+    }
+
     public record WorksWithConditionalWeakTableLambdaLcm(long a, long b)
     {
         public long Lcm => lcm.GetValue(this, static @this => new Wrapper<long>(Funcs.DumbAlgLcm(@this.a, @this.b)));
@@ -67,6 +75,7 @@ namespace Benchmark
         private WorksWithLazyLcm withLazy = new(Funcs.A, Funcs.B);
         private WorksWithFieldCacheStaticLambdaLcm withStaticCache = new(Funcs.A, Funcs.B);
         private WorksWithFieldCacheStaticLambdaCachedLcm withStaticCacheLambdaCached = new(Funcs.A, Funcs.B);
+        private WorksWithFieldCacheStaticLambdaCachedLocallyLcm withStaticCacheLambdaCachedLocally = new(Funcs.A, Funcs.B);
         private WorksWithConditionalWeakTableLambdaLcm worksWithConditionalWeakTableLambdaLcm = new(Funcs.A, Funcs.B);
 
         [Benchmark] public void BenchFunction() => Funcs.DumbAlgLcm(Funcs.A, Funcs.B);
@@ -87,6 +96,12 @@ namespace Benchmark
         public void FieldCacheLambdaCachedT()
         {
             var v = withStaticCacheLambdaCached.Lcm;
+        }
+
+        [Benchmark]
+        public void FieldCacheLambdaCachedLocallyT()
+        {
+            var v = withStaticCacheLambdaCachedLocally.Lcm;
         }
 
         [Benchmark]

@@ -37,12 +37,13 @@ or override `Equals` for all records which have cached fields.
 
 ## Benchmarks
 
-|                  Method |          Mean |      Error |      StdDev |
-|------------------------ |--------------:|-----------:|------------:|
-|           BenchFunction | 4,583.8618 ns | 90.0384 ns | 123.2456 ns |
-|                   LazyT |     0.6009 ns |  0.0524 ns |   0.0846 ns |
-|             FieldCacheT |     2.3416 ns |  0.0775 ns |   0.0725 ns |
-| FieldCacheLambdaCachedT |     0.4180 ns |  0.0429 ns |   0.0826 ns |
-|   ConditionalWeakTableT |    23.6355 ns |  0.5082 ns |   0.5649 ns |
+|                         Method |          Mean |      Error |      StdDev |
+|------------------------------- |--------------:|-----------:|------------:|
+|                  BenchFunction | 4,536.5352 ns | 89.0327 ns | 171.5359 ns |
+|                          LazyT |     0.4389 ns |  0.0471 ns |   0.0861 ns |
+|                    FieldCacheT |     2.3693 ns |  0.0846 ns |   0.0941 ns |
+|        FieldCacheLambdaCachedT |     0.6864 ns |  0.0346 ns |   0.0307 ns |
+| FieldCacheLambdaCachedLocallyT |     0.3660 ns |  0.0434 ns |   0.0385 ns |
+|          ConditionalWeakTableT |    25.2509 ns |  0.4626 ns |   0.4327 ns |
 
 (needs improvement for sure XD)
