@@ -40,23 +40,8 @@ namespace Benchmark
 
     public record WorksWithFieldCacheStaticLambdaLcm(long a, long b)
     {
-        public long Lcm => lcm.GetValue(static @this => Funcs.DumbAlgLcm(@this.a, @this.b), this);
-        private FieldCache<long> lcm;
-    }
-
-    public record WorksWithFieldCacheStaticLambdaCachedLcm(long a, long b)
-    {
-        private static Func<WorksWithFieldCacheStaticLambdaCachedLcm, long> lambda = static @this => Funcs.DumbAlgLcm(@this.a, @this.b);
-        public long Lcm => lcm.GetValue(lambda, this);
-        private FieldCache<long> lcm;
-    }
-
-    public record WorksWithFieldCacheStaticLambdaCachedLocallyLcm(long a, long b)
-    {
-        public long Lcm => lcm.GetValue(localLambda, this);
-        private FieldCache<long> lcm;
-        private Func<WorksWithFieldCacheStaticLambdaCachedLocallyLcm, long> localLambda = lambda;
-        private static Func<WorksWithFieldCacheStaticLambdaCachedLocallyLcm, long> lambda = static @this => Funcs.DumbAlgLcm(@this.a, @this.b);
+        public long Lcm => lcm.GetValue(this);
+        private FieldCache<WorksWithFieldCacheStaticLambdaLcm, long> lcm = new(static @this => Funcs.DumbAlgLcm(@this.a, @this.b));
     }
 
     public record WorksWithConditionalWeakTableLambdaLcm(long a, long b)
@@ -74,8 +59,6 @@ namespace Benchmark
     {
         private WorksWithLazyLcm withLazy = new(Funcs.A, Funcs.B);
         private WorksWithFieldCacheStaticLambdaLcm withStaticCache = new(Funcs.A, Funcs.B);
-        private WorksWithFieldCacheStaticLambdaCachedLcm withStaticCacheLambdaCached = new(Funcs.A, Funcs.B);
-        private WorksWithFieldCacheStaticLambdaCachedLocallyLcm withStaticCacheLambdaCachedLocally = new(Funcs.A, Funcs.B);
         private WorksWithConditionalWeakTableLambdaLcm worksWithConditionalWeakTableLambdaLcm = new(Funcs.A, Funcs.B);
 
         [Benchmark] public void BenchFunction() => Funcs.DumbAlgLcm(Funcs.A, Funcs.B);
@@ -90,18 +73,6 @@ namespace Benchmark
         public void FieldCacheT()
         {
             var v = withStaticCache.Lcm;
-        }
-
-        [Benchmark]
-        public void FieldCacheLambdaCachedT()
-        {
-            var v = withStaticCacheLambdaCached.Lcm;
-        }
-
-        [Benchmark]
-        public void FieldCacheLambdaCachedLocallyT()
-        {
-            var v = withStaticCacheLambdaCachedLocally.Lcm;
         }
 
         [Benchmark]

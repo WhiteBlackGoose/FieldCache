@@ -37,13 +37,11 @@ or override `Equals` for all records which have cached fields.
 
 ## Benchmarks
 
-|                         Method |          Mean |      Error |      StdDev |
-|------------------------------- |--------------:|-----------:|------------:|
-|                  BenchFunction | 4,536.5352 ns | 89.0327 ns | 171.5359 ns |
-|                          LazyT |     0.4389 ns |  0.0471 ns |   0.0861 ns |
-|                    FieldCacheT |     2.3693 ns |  0.0846 ns |   0.0941 ns |
-|        FieldCacheLambdaCachedT |     0.6864 ns |  0.0346 ns |   0.0307 ns |
-| FieldCacheLambdaCachedLocallyT |     0.3660 ns |  0.0434 ns |   0.0385 ns |
-|          ConditionalWeakTableT |    25.2509 ns |  0.4626 ns |   0.4327 ns |
+|                Method |          Mean |       Error |      StdDev |
+|---------------------- |--------------:|------------:|------------:|
+|         BenchFunction | 5,219.8751 ns | 104.2896 ns | 255.8242 ns |
+|                 LazyT |     0.3805 ns |   0.0469 ns |   0.0936 ns |
+|           FieldCacheT |     0.3024 ns |   0.0478 ns |   0.0622 ns |
+| ConditionalWeakTableT |    24.4216 ns |   0.4880 ns |   0.4326 ns |
 
-(needs improvement for sure XD)
+So the conclusion is... that `FieldCache<,>` is no slower than `Lazy<>`.

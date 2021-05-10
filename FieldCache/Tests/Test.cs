@@ -10,23 +10,23 @@ namespace Tests
         [TestMethod]
         public void TestSimple1()
         {
-            var container = new FieldCache<int>();
-            Assert.AreEqual(4, container.GetValue(_ => 4, this));
-            Assert.AreEqual(4, container.GetValue(_ => 4, this));
+            var container = new FieldCache<Test, int>(_ => 4);
+            Assert.AreEqual(4, container.GetValue(this));
+            Assert.AreEqual(4, container.GetValue(this));
         }
 
         [TestMethod]
         public void TestSimpleString()
         {
-            var container = new FieldCache<string>();
-            Assert.AreEqual("ss", container.GetValue(_ => "ss", this));
-            Assert.AreEqual("ss", container.GetValue(_ => "ss", this));
+            var container = new FieldCache<Test, string>(_ => "ss");
+            Assert.AreEqual("ss", container.GetValue(this));
+            Assert.AreEqual("ss", container.GetValue(this));
         }
 
         private record SomeTestRecord
         {
-            public ConcurrentDictionary<string, string> Dict => dict.GetValue(_ => new(), this);
-            private FieldCache<ConcurrentDictionary<string, string>> dict;
+            public ConcurrentDictionary<string, string> Dict => dict.GetValue(this);
+            private FieldCache<SomeTestRecord, ConcurrentDictionary<string, string>> dict = new(_ => new());
         }
 
         [TestMethod]
@@ -44,8 +44,8 @@ namespace Tests
 
         private record Person(string FirstName, string LastName)
         {
-            public string FullName => fullName.GetValue(@this => @this.FirstName + " " + @this.LastName, this);
-            private FieldCache<string> fullName;
+            public string FullName => fullName.GetValue(this);
+            private FieldCache<Person, string> fullName = new(@this => @this.FirstName + " " + @this.LastName);
         }
 
         [TestMethod]
@@ -85,8 +85,8 @@ namespace Tests
 
         private record SomeTestRecord_static
         {
-            public ConcurrentDictionary<string, string> Dict => dict.GetValue(_ => new(), this);
-            private FieldCache<ConcurrentDictionary<string, string>> dict;
+            public ConcurrentDictionary<string, string> Dict => dict.GetValue(this);
+            private FieldCache<SomeTestRecord_static, ConcurrentDictionary<string, string>> dict = new(_ => new());
         }
 
         [TestMethod]

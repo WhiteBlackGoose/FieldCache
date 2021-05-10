@@ -10,7 +10,6 @@ Console.WriteLine(personB.FullName);
 
 public sealed record Person(string FirstName, string SecondName)
 {
-    public string FullName => fullName.GetValue(
-        @this => @this.FirstName + " " + @this.SecondName, this);
-    private FieldCache<string> fullName;
+    public string FullName => fullName.GetValue(this);
+    private FieldCache<Person, string> fullName = new(@this => @this.FirstName + " " + @this.SecondName);
 }
