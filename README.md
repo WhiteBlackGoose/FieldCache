@@ -37,11 +37,23 @@ or override `Equals` for all records which have cached fields.
 
 ## Benchmarks
 
-|                Method |      Mean |     Error |    StdDev | Ratio | RatioSD |
-|---------------------- |----------:|----------:|----------:|------:|--------:|
-|             JustLongs |  1.610 ns | 0.0197 ns | 0.0184 ns |  1.00 |    0.00 |
-|                 LazyT |  4.211 ns | 0.0416 ns | 0.0389 ns |  2.62 |    0.04 |
-|           FieldCacheT |  3.574 ns | 0.0365 ns | 0.0341 ns |  2.22 |    0.04 |
-| ConditionalWeakTableT | 28.088 ns | 0.5594 ns | 1.0369 ns | 17.31 |    0.65 |
+Running info:
+```
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19042
+Intel Core i7-7700HQ CPU 2.80GHz (Kaby Lake), 1 CPU, 8 logical and 4 physical cores
+.NET Core SDK=6.0.100-preview.2.21155.3
+  [Host]     : .NET Core 5.0.4 (CoreCLR 5.0.421.11614, CoreFX 5.0.421.11614), X64 RyuJIT
+  DefaultJob : .NET Core 5.0.4 (CoreCLR 5.0.421.11614, CoreFX 5.0.421.11614), X64 RyuJIT
+```
 
-So the conclusion is... that `FieldCache<,>` is slightly faster than `Lazy<>`.
+Results:
+
+|                                                          Method |      Mean |     Error |    StdDev | Ratio | RatioSD |
+|---------------------------------------------------------------- |----------:|----------:|----------:|------:|--------:|
+|       'This overhead is a tradeoff to perform a microbenchmark' |  1.594 ns | 0.0304 ns | 0.0284 ns |  0.38 |    0.01 |
+|         'The time needed for standard Lazy<> to return a value' |  4.220 ns | 0.0670 ns | 0.0627 ns |  1.00 |    0.00 |
+|           'The time needed for FieldCache<,> to return a value' |  3.462 ns | 0.0435 ns | 0.0407 ns |  0.82 |    0.02 |
+| 'The time needed for ConditionalWeakTable<,> to return a value' | 27.723 ns | 0.5365 ns | 0.7162 ns |  6.54 |    0.19 |
+
+So the conclusion is... that `FieldCache<,>` is slightly (15-20%) faster than `Lazy<>`. It is by far a better solution,
+than using `ConditionalWeakTable`. The total time to call `GetValue` is about 1.8ns on the machine.

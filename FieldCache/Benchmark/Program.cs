@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 // Some constants
 public static class Funcs
 {
-    public const int OPERATION_COUNT = 0x100; // must be divisible by 8 so that loop unrolling works 100% correctly
+    public const int OPERATION_COUNT = 0x1000; // must be divisible by 8 so that loop unrolling works 100% correctly
     public const int ARRAY_SIZE = 100;
 
     public static long DumbAlg(long a, long b) => (a + b) % ARRAY_SIZE;
@@ -83,8 +83,8 @@ public class ContainerPerformance
         }
     }
 
-    [Benchmark(OperationsPerInvoke = Funcs.OPERATION_COUNT, Baseline = true)]
-    public long JustLongs()
+    [Benchmark(OperationsPerInvoke = Funcs.OPERATION_COUNT, Description = "This overhead is a tradeoff to perform a microbenchmark")]
+    public long BenchmarkOverhead()
     {
         var a = 0L;
         for (int i = 0; i < Funcs.OPERATION_COUNT; i += 8)
@@ -97,7 +97,7 @@ public class ContainerPerformance
         return a;
     }
 
-    [Benchmark(OperationsPerInvoke = Funcs.OPERATION_COUNT)]
+    [Benchmark(OperationsPerInvoke = Funcs.OPERATION_COUNT, Description = "The time needed for standard Lazy<> to return a value", Baseline = true)]
     public long LazyT()
     {
         var a = 0L;
@@ -110,8 +110,8 @@ public class ContainerPerformance
         }
         return a;
     }
-
-    [Benchmark(OperationsPerInvoke = Funcs.OPERATION_COUNT)]
+    
+    [Benchmark(OperationsPerInvoke = Funcs.OPERATION_COUNT, Description = "The time needed for FieldCache<,> to return a value")]
     public long FieldCacheT()
     {
         var a = 0L;
@@ -125,7 +125,7 @@ public class ContainerPerformance
         return a;
     }
 
-    [Benchmark(OperationsPerInvoke = Funcs.OPERATION_COUNT)]
+    [Benchmark(OperationsPerInvoke = Funcs.OPERATION_COUNT, Description = "The time needed for ConditionalWeakTable<,> to return a value")]
     public long ConditionalWeakTableT()
     {
         var a = 0L;
