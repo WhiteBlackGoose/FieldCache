@@ -4,94 +4,146 @@ using FieldCacheNamespace;
 using System;
 using System.Runtime.CompilerServices;
 
-namespace Benchmark
+// Some constants
+public static class Funcs
 {
-    public static class Funcs
+    public const int OPERATION_COUNT = 0x100; // must be divisible by 8 so that loop unrolling works 100% correctly
+    public const int ARRAY_SIZE = 100;
+
+    public static long DumbAlg(long a, long b) => (a + b) % ARRAY_SIZE;
+}
+
+
+
+// This is the first benched method
+public record WorksWithLazyRandom
+{
+    public long Value => value.Value;
+    private Lazy<long> value;
+
+    public long a { get; private set; }
+    public long b { get; private set; }
+
+    public WorksWithLazyRandom(long a, long b)
     {
-        public static long DumbAlgLcm(long a, long b)
-        {
-            var min = Math.Min(a, b);
-            var max = Math.Max(a, b);
-            var curr = max;
-            while (curr > min)
-                curr -= 10000;
-            return curr + max;
-        }
-
-        public static readonly long A = 138125424;
-        public static readonly long B = 10341473;
+        this.a = a;
+        this.b = b;
+        value = new(() => Funcs.DumbAlg(this.a, this.b), isThreadSafe: true);
     }
+}
 
-    public record WorksWithLazyLcm
-    {
-        public long Lcm => lcm.Value;
-        private Lazy<long> lcm;
 
-        public long a { get; private set; }
-        public long b { get; private set; }
+// This is the second benched method
+public record WorksWithFieldCacheStaticLambdaRandom(long a, long b)
+{
+    public long Value => lcm.GetValue(this);
+    private FieldCache<WorksWithFieldCacheStaticLambdaRandom, long> lcm = new(static @this => Funcs.DumbAlg(@this.a, @this.b));
+}
 
-        public WorksWithLazyLcm(long a, long b)
-        {
-            this.a = a;
-            this.b = b;
-            lcm = new(() => Funcs.DumbAlgLcm(this.a, this.b), isThreadSafe: true);
-        }
-    }
 
-    public record WorksWithFieldCacheStaticLambdaLcm(long a, long b)
-    {
-        public long Lcm => lcm.GetValue(this);
-        private FieldCache<WorksWithFieldCacheStaticLambdaLcm, long> lcm = new(static @this => Funcs.DumbAlgLcm(@this.a, @this.b));
-    }
-
-    public record WorksWithConditionalWeakTableLambdaLcm(long a, long b)
-    {
-        public long Lcm => lcm.GetValue(this, static @this => new Wrapper<long>(Funcs.DumbAlgLcm(@this.a, @this.b)));
-        private readonly ConditionalWeakTable<WorksWithConditionalWeakTableLambdaLcm, Wrapper<long>> lcm = new();
-    }
+// This is the third benched method
+public record WorksWithConditionalWeakTableLambdaRandom(long a, long b)
+{
+    public long Value => lcm.GetValue(this, static @this => new Wrapper<long>(Funcs.DumbAlg(@this.a, @this.b)));
+    private readonly ConditionalWeakTable<WorksWithConditionalWeakTableLambdaRandom, Wrapper<long>> lcm = new();
 
     public sealed record Wrapper<T>(T Value)
     {
         public static implicit operator T(Wrapper<T> wrapper) => wrapper.Value;
     }
+}
 
-    public class ContainerPerformance
+// This is the benchmark
+public class ContainerPerformance
+{
+    private WorksWithLazyRandom[] withLazy;
+    private WorksWithFieldCacheStaticLambdaRandom[] withStaticCache;
+    private WorksWithConditionalWeakTableLambdaRandom[] worksWithConditionalWeakTableLambda;
+    private long[] justLongs;
+
+
+    [GlobalSetup]
+    public void Setup()
     {
-        private WorksWithLazyLcm withLazy = new(Funcs.A, Funcs.B);
-        private WorksWithFieldCacheStaticLambdaLcm withStaticCache = new(Funcs.A, Funcs.B);
-        private WorksWithConditionalWeakTableLambdaLcm worksWithConditionalWeakTableLambdaLcm = new(Funcs.A, Funcs.B);
+        withLazy = InitArray((a, b) => new WorksWithLazyRandom(a, b));
+        withStaticCache = InitArray((a, b) => new WorksWithFieldCacheStaticLambdaRandom(a, b));
+        worksWithConditionalWeakTableLambda = InitArray((a, b) => new WorksWithConditionalWeakTableLambdaRandom(a, b));
+        justLongs = InitArray((a, b) => (a + b) % Funcs.ARRAY_SIZE);
 
-        [Benchmark] public void BenchFunction() => Funcs.DumbAlgLcm(Funcs.A, Funcs.B);
-
-        [Benchmark]
-        public void LazyT()
+        // The array is designed the way that you can jump from point i-th to point array[i] and then to
+        // array[array[i]] and etc. It allows to ensure that nothing is optimized out while the entire
+        // array is easily fitted into L1.
+        static T[] InitArray<T>(Func<long, long, T> init)
         {
-            var v = withLazy.Lcm;
-        }
-
-        [Benchmark]
-        public void FieldCacheT()
-        {
-            var v = withStaticCache.Lcm;
-        }
-
-        [Benchmark]
-        public void ConditionalWeakTableT()
-        {
-            var v = worksWithConditionalWeakTableLambdaLcm.Lcm;
+            var res = new T[Funcs.ARRAY_SIZE];
+            var random = new Random(165_345);
+            for (int i = 0; i < Funcs.ARRAY_SIZE; i++)
+                res[i] = init(random.Next(), random.Next());
+            return res;
         }
     }
 
-    class Program
+    [Benchmark(OperationsPerInvoke = Funcs.OPERATION_COUNT, Baseline = true)]
+    public long JustLongs()
     {
-        static void Main(string[] args)
+        var a = 0L;
+        for (int i = 0; i < Funcs.OPERATION_COUNT; i += 8)
         {
-            BenchmarkRunner.Run<ContainerPerformance>();
-            //var withCache = new WorksWithFieldCacheLcm(Funcs.A, Funcs.B);
-            //for (long i = 0; i < 10_000_000_000_0L; i++)
-            //{
-            //    var v = withCache.Lcm;
-            //}
+            a = justLongs[a]; a = justLongs[a];
+            a = justLongs[a]; a = justLongs[a];
+            a = justLongs[a]; a = justLongs[a];
+            a = justLongs[a]; a = justLongs[a];
         }
+        return a;
+    }
+
+    [Benchmark(OperationsPerInvoke = Funcs.OPERATION_COUNT)]
+    public long LazyT()
+    {
+        var a = 0L;
+        for (int i = 0; i < Funcs.OPERATION_COUNT; i += 8)
+        {
+            a = withLazy[a].Value; a = withLazy[a].Value;
+            a = withLazy[a].Value; a = withLazy[a].Value;
+            a = withLazy[a].Value; a = withLazy[a].Value;
+            a = withLazy[a].Value; a = withLazy[a].Value;
+        }
+        return a;
+    }
+
+    [Benchmark(OperationsPerInvoke = Funcs.OPERATION_COUNT)]
+    public long FieldCacheT()
+    {
+        var a = 0L;
+        for (int i = 0; i < Funcs.OPERATION_COUNT; i += 8)
+        {
+            a = withStaticCache[a].Value; a = withStaticCache[a].Value;
+            a = withStaticCache[a].Value; a = withStaticCache[a].Value;
+            a = withStaticCache[a].Value; a = withStaticCache[a].Value;
+            a = withStaticCache[a].Value; a = withStaticCache[a].Value;
+        }
+        return a;
+    }
+
+    [Benchmark(OperationsPerInvoke = Funcs.OPERATION_COUNT)]
+    public long ConditionalWeakTableT()
+    {
+        var a = 0L;
+        for (int i = 0; i < Funcs.OPERATION_COUNT; i += 8)
+        {
+            a = worksWithConditionalWeakTableLambda[a].Value; a = worksWithConditionalWeakTableLambda[a].Value;
+            a = worksWithConditionalWeakTableLambda[a].Value; a = worksWithConditionalWeakTableLambda[a].Value;
+            a = worksWithConditionalWeakTableLambda[a].Value; a = worksWithConditionalWeakTableLambda[a].Value;
+            a = worksWithConditionalWeakTableLambda[a].Value; a = worksWithConditionalWeakTableLambda[a].Value;
+        }
+        return a;
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        BenchmarkRunner.Run<ContainerPerformance>();
     }
 }
